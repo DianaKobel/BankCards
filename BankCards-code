@@ -1,0 +1,111 @@
+#include <iostream>
+using namespace std;
+
+const int MAX_LEN = 100;
+const int MAX_CARDS = 10;
+
+struct Card 
+{
+    char ownerName[MAX_LEN];
+    char cardNumber[MAX_LEN];
+    char expirationDate[MAX_LEN];
+    char cvcCode[MAX_LEN];
+};
+
+void copyString(char* dest, const char* src) 
+{
+    while (*src)
+    {
+        *dest++ = *src++;
+    }
+    *dest = '\0';
+}
+
+bool compareString(const char* str1, const char* str2)
+{
+    while (*str1 && (*str1 == *str2))
+    {
+        str1++;
+        str2++;
+    }
+    return (*str1 == *str2);
+}
+
+void createNewCard(Card* cards, int& cardCount)
+{
+    if (cardCount >= MAX_CARDS)
+    {
+        cout << "The maximum number of cards has been reached! " << "\n";
+        return;
+    }
+
+    Card& card = cards[cardCount++];
+
+    cout << "PIB: ";
+    cin.ignore();
+    cin.getline(card.ownerName, MAX_LEN);
+
+    cout << "Number card: ";
+    cin.getline(card.cardNumber, MAX_LEN);
+
+    cout << "(MM/YY): ";
+    cin.getline(card.expirationDate, MAX_LEN);
+
+    cout << "CVC code: ";
+    cin.getline(card.cvcCode, MAX_LEN);
+
+    cout << "Saved cards!" << "\n";
+}
+
+void displayCardInfo(const Card* cards, int cardCount, const char* cardNumber) 
+{
+    for (int i = 0; i < cardCount; ++i) 
+    {
+        if (compareString(cards[i].cardNumber, cardNumber)) 
+        {
+            cout << "PIB: " << cards[i].ownerName << "\n";
+            cout << "Number card: " << cards[i].cardNumber << "\n";
+            cout << "(MM/YY): " << cards[i].expirationDate << "\n";
+            cout << "CVC code: " << cards[i].cvcCode << "\n";
+            return;
+        }
+    }
+    cerr << "Error!" << "\n";
+}
+
+int main() 
+{
+    Card cards[MAX_CARDS];
+    int cardCount = 0;
+    int choice;
+    char cardNumber[MAX_LEN];
+
+    do
+    {
+        cout << "1. Create a map " << "\n";
+        cout << "2. Map information " << "\n";
+        cout << "3. Go out " << "\n";
+        cout << "Select: ";
+        cin >> choice;
+        cin.ignore();
+
+        switch (choice) 
+        {
+        case 1:
+            createNewCard(cards, cardCount);
+            break;
+        case 2:
+            cout << "Number card: ";
+            cin.getline(cardNumber, MAX_LEN);
+            displayCardInfo(cards, cardCount, cardNumber);
+            break;
+        case 3:
+            cout << "Exit the program... " << "\n";
+            break;
+        default:
+            cout << "Wrong choice. Try again. " << "\n";
+        }
+    } while (choice != 3);
+
+    return 0;
+}
